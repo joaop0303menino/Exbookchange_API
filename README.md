@@ -1,13 +1,6 @@
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=4169E1&height=120&section=header"/>
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=E6F4E9&height=120&section=header"/>
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com/?color=66CDAA&size=35&center=true&vCenter=true&width=1000&lines=Welcome+to+ExBookChange+API!;Manage+Books,+Users,+Transactions,+and+Notifications)]()
-
-<div align="center">  
-  <img width="49%" height="195px" src="https://github-readme-stats.vercel.app/api?username=joaop0303menino&show_icons=true&theme=tokyonight" alt="João Menino GitHub stats" /> 
-  <img width="41%" height="195px" src="https://github-readme-stats.vercel.app/api/top-langs/?username=joaop0303menino&layout=compact&hide_border=true&theme=tokyonight" />
-</div>
-
-[![GitHub Activity Graph](https://github-readme-activity-graph.vercel.app/graph?username=joaop0303menino&bg_color=120e20&color=ffffff&line=00d5ff&point=00ff7b&area=true&hide_border=true)](https://github.com/joaop0303menino)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com/?color=25434B&size=35&center=true&vCenter=true&width=1000&lines=Welcome+to+ExBookChange+API!;Manage+Books,+Users,+Transactions,+and+Notifications)]()
 
 ---
 
@@ -40,7 +33,7 @@ backend/
 
 ---
 
-### 📂 Principais Arquivos por App
+## 📂 Principais Arquivos por App
 
 Cada app contém arquivos que isolam responsabilidades, facilitando o desenvolvimento e manutenção:
 
@@ -55,7 +48,7 @@ __init__.py	Arquivo para marcar o diretório como pacote Python, permitindo impo
 
 ---
 
-#### ⚙️ Configurações Importantes (core/settings.py)
+## ⚙️ Configurações Importantes (core/settings.py)
 INSTALLED_APPS: Certifique-se de incluir todos os apps criados, como 'apps.books', 'apps.users' etc.
 
 STATIC_URL: URL base para arquivos estáticos, normalmente '/static/'.
@@ -66,7 +59,7 @@ Configurações extras: banco de dados, autenticação, middlewares e variáveis
 
 ---
 
-##### 🗝️ Arquivo .env (exemplo)
+## 🗝️ Arquivo .env (exemplo)
 
 Para separar variáveis sensíveis e facilitar a configuração em diferentes ambientes, utilize o arquivo .env:
 
@@ -78,7 +71,7 @@ DATABASE_URL=sqlite:///db.sqlite3
 
 ---
 
-###### ▶️ Como rodar o servidor localmente
+## ▶️ Como rodar o servidor localmente
 
 ```plaintext
 Clone o repositório e entre na pasta do projeto:
@@ -91,5 +84,7 @@ python manage.py runserver
 ▶️ Acesse a API no navegador em: http://localhost:8000/ 
 ```
 
-💻 Tecnologias utilizadas
-<p> <img height="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" /> <img height="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/django/django-original.svg" alt="Django" /> <img height="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/django/django-plain.svg" alt="Django REST Framework" /> <img height="40"
+## 💻 Tecnologias utilizadas
+<p> <img height="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/python/python-original.svg" alt="Python" /> <img height="40" src="https://raw.githubusercontent.com/devicons/devicon/master/icons/django/django-plain.svg" alt="Django REST Framework" /> <img height="40"
+
+<img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=E6F4E9&height=120&section=footer"/>
