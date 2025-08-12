@@ -1,11 +1,12 @@
-from decouple import config
 from pathlib import Path
+from decouple import config, Csv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="unsafe-secret-key")
 DEBUG = config("DEBUG", default=True, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",")
+
 INSTALLED_APPS = [
     # apps django padrão...
     'django.contrib.admin',
@@ -26,10 +27,7 @@ INSTALLED_APPS = [
     'apps.complaints',
 ]
 
-STATIC_URL = '/static/'
-
 ROOT_URLCONF = 'core.urls'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -41,15 +39,21 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ALLOWED_ORIGINS = config(
+    "CORS_ALLOWED_ORIGINS",
+    default="http://localhost:3000",
+    cast=Csv()
+)
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],  # aqui você pode adicionar diretórios de templates se precisar
-        'APP_DIRS': True,  # habilita busca automática por templates nas apps
+        'DIRS': [],  # pode adicionar templates personalizados aqui
+        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
-                'django.template.context_processors.request',  # necessário para admin
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
@@ -57,3 +61,19 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = 'core.wsgi.application'
+
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # ajuste conforme seu controle de acesso
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        # para JWT futuramente:
+        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
