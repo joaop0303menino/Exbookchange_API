@@ -1,3 +1,64 @@
 from django.db import models
+from ..users.models import User
 
-# Create your models here.
+
+class Author(models.Model):
+    full_name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.full_name
+
+
+class EnumStatus(models.TextChoices):
+    STATUS_1 = '1', 'Status 1'
+    STATUS_2 = '2', 'Status 2'
+    STATUS_3 = '3', 'Status 3'
+    STATUS_4 = '4', 'Status 4'
+    STATUS_5 = '5', 'Status 5'
+
+
+class ConservationStatus(models.Model):
+    status = models.CharField(
+        max_length=1,
+        choices=EnumStatus.choices,
+        default=EnumStatus.STATUS_5
+    )
+    description_status = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_status_display()} - {self.description_status or ''}"
+
+
+class EnumExchangeDonation(models.TextChoices):
+    EXCHANGE = '1', 'Exchange'
+    DONATION = '2', 'Donation'
+
+
+class Announces(models.Model):
+    conservation_status = models.ForeignKey(
+        ConservationStatus,
+        on_delete=models.CASCADE,
+        related_name='announces'
+    )
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='announces_created'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='announces_authored'
+    )
+    title = models.CharField(max_length=150)
+    description = models.TextField(blank=True, null=True)
+    is_archived = models.BooleanField(default=False)
+    type = models.CharField(
+        max_length=1,
+        choices=EnumExchangeDonation.choices,
+        default=EnumExchangeDonation.EXCHANGE
+    )
+    posted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.get_type_display()})"
