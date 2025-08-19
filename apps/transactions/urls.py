@@ -1,6 +1,6 @@
 from django.urls import path
-from . import views
+from .views import create_announce  # importa as views do app
 
 urlpatterns = [
-    path('', views.ExchangeDonationHistoricViews.as_view()),
+   path("announces/", create_announce, name="create_announce"),
 ]
