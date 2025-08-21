@@ -1,18 +1,33 @@
-from django.shortcuts import render
-from rest_framework.decorators import APIView
-from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import status
-from apps.transactions.service.ExchangeDonationHistoricService import ExchangeDonationService
+from django.shortcuts import get_object_or_404
 from apps.transactions.serializers import ExchangeDonationHistoricSerializer
+from apps.transactions.service.ExchangeDonationHistoricService import ExchangeDonationService
+from apps.users.models import Profile
 
 class ExchangeDonationHistoricViews(APIView):
     def __init__(self):
-        self.user_service = ExchangeDonationService()
+        self.service = ExchangeDonationService()
 
     def post(self, request):
-        serializer = ExchangeDonationHistoricSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        data = request.data
 
+        user_receiver_name = data.get("user_receiver")
+        user_receiver = Profile.objects.filter(nickname=user_receiver_name).first()
+
+        if not user_receiver:
+            return Response({
+                "status": "error",
+                "message": f"Usuário '{user_receiver_name}' não encontrado."
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ExchangeDonationHistoricSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return JsonResponse({"status": "success", "message": "transactions created successfully", "data": serializer.data}, status=status.HTTP_201_CREATED)
+        return Response({
+            "status": "success",
+            "message": "Transação registrada com sucesso",
+            "data": serializer.data
+        }, status=status.HTTP_201_CREATED)
