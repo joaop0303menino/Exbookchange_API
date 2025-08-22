@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from apps.transactions.serializers import ExchangeDonationHistoricSerializer
 from apps.transactions.service.ExchangeDonationHistoricService import ExchangeDonationService
 from apps.users.models import Profile
+from apps.books.models import Announces
 
 class ExchangeDonationHistoricViews(APIView):
     def __init__(self):
@@ -25,6 +26,12 @@ class ExchangeDonationHistoricViews(APIView):
         serializer = ExchangeDonationHistoricSerializer(data=data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        
+        announce_id = data.get("id_announce")
+        announce = get_object_or_404(Announces, id=announce_id)
+        announce.is_archived = True
+        announce.save()
+
 
         return Response({
             "status": "success",
