@@ -1,5 +1,4 @@
 from apps.transactions.models import ExchangeDonationHistoric
-
 class ExchangeDonationService:
     def __init__(self):
         self.model = ExchangeDonationHistoric

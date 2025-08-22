@@ -1,8 +1,6 @@
 from django.db import models
 from apps.users.models import User
 from apps.books.models import Announces
-
-# Tabela de trocas/doações
 class ExchangeDonationHistoric(models.Model):
     id_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="exchange_donations")
     id_announce = models.ForeignKey(Announces, on_delete=models.CASCADE, related_name="exchange_donations")
