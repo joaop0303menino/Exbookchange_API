@@ -1,12 +1,17 @@
 from rest_framework import serializers
-from .models import Announces, ConservationStatus, EnumExchangeDonation
+from .models import Announces, ConservationStatus, EnumExchangeDonation, ImagesBook
 from apps.users.models import User
 
-
+class ImagesBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImagesBook
+        fields = ['id', 'announce', 'image', 'is_cover']
+        
 class AnnounceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     author_id = serializers.IntegerField(required=False, allow_null=True, write_only=True)
     conservation_status_id = serializers.IntegerField(write_only=True)
+    images = ImagesBookSerializer(many=True, read_only=True)  
 
     class Meta:
         model = Announces
@@ -18,6 +23,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
             "user",
             "author_id",
             "conservation_status_id",
+            "images",
             "posted_at",
         ]
         read_only_fields = ["id", "posted_at"]
