@@ -1,14 +1,6 @@
 from django.db import models
 from ..users.models import User
 
-
-class Author(models.Model):
-    full_name = models.CharField(max_length=150)
-
-    def __str__(self):
-        return self.full_name
-
-
 class EnumStatus(models.TextChoices):
     STATUS_1 = '1', 'Status 1'
     STATUS_2 = '2', 'Status 2'
@@ -17,6 +9,17 @@ class EnumStatus(models.TextChoices):
     STATUS_5 = '5', 'Status 5'
 
 
+class EnumExchangeDonation(models.TextChoices):
+    EXCHANGE = '1', 'Exchange'
+    DONATION = '2', 'Donation'
+
+
+class Author(models.Model):
+    full_name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.full_name
+    
 class ConservationStatus(models.Model):
     status = models.CharField(
         max_length=1,
@@ -27,12 +30,6 @@ class ConservationStatus(models.Model):
 
     def __str__(self):
         return f"{self.get_status_display()} - {self.description_status or ''}"
-
-
-class EnumExchangeDonation(models.TextChoices):
-    EXCHANGE = '1', 'Exchange'
-    DONATION = '2', 'Donation'
-
 
 class Announces(models.Model):
     conservation_status = models.ForeignKey(
@@ -62,3 +59,15 @@ class Announces(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.get_type_display()})"
+
+class ImagesBook(models.Model):
+    announce = models.ForeignKey(
+        Announces, 
+        on_delete=models.CASCADE, 
+        related_name='images'
+    )
+    image = models.ImageField(upload_to='announces/')
+    is_cover = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Imagem do anúncio {self.announce.id}"
