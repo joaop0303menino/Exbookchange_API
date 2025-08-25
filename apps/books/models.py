@@ -15,7 +15,7 @@ class EnumExchangeDonation(models.TextChoices):
 
 
 class Author(models.Model):
-    full_name = models.CharField(max_length=150)
+    full_name = models.CharField(max_length=150, unique=True)
 
     def __str__(self):
         return self.full_name
@@ -43,7 +43,7 @@ class Announces(models.Model):
         related_name='announces_created'
     )
     author = models.ForeignKey(
-        User,
+        Author,
         on_delete=models.CASCADE,
         related_name='announces_authored'
     )
