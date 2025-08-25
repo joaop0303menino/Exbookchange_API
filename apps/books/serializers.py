@@ -9,7 +9,7 @@ class ImagesBookSerializer(serializers.ModelSerializer):
         
 class AnnounceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
-    author_id = serializers.IntegerField(required=False, allow_null=True, write_only=True)
+    author_full_name = serializers.CharField( write_only=True)
     conservation_status_id = serializers.IntegerField(write_only=True)
     images = ImagesBookSerializer(many=True, read_only=True)  
 
@@ -21,7 +21,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
             "description",
             "type",
             "user",
-            "author_id",
+            "author_full_name",
             "conservation_status_id",
             "images",
             "posted_at",
