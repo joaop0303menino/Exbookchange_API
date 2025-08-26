@@ -76,7 +76,7 @@ REST_FRAMEWORK = {
         # para JWT futuramente:
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'myapp.utils.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'apps.exception_handler.custom_exception_handler',
 }
 
 DATABASES = {
