@@ -16,7 +16,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     nickname = models.CharField(max_length=100)
     description = models.TextField(blank=True, null=True)
-    photo = models.BinaryField(blank=True, null=True)
+    photo = models.ImageField(blank=True, null=True)
 
     def __str__(self):
         return self.nickname
