@@ -24,3 +24,11 @@ class UserService:
 
     def getUserById(self, id):
         return self.user_model.objects.filter(id=id).first()
+    
+    def login(self, email, password):
+        user = self.getUserByEmail(email)
+
+        if not user or not user.check_password(password):
+            return JsonResponse({"status": "error", "message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return user

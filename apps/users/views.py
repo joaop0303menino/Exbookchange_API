@@ -20,6 +20,18 @@ class UserViews(APIView):
 
         return JsonResponse({"status": "success", "message": "User created successfully","data": {"id": user.id, "full_name": user.full_name, "email": user.email}}, status=status.HTTP_201_CREATED)
     
+class LoginView(APIView):
+    user_service = UserService()
+
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
+        user = self.user_service.login_user(email, password)
+        
+        if user:
+            return JsonResponse({"message": "Login realizado com sucesso!"}, status=status.HTTP_200_OK)
+        return JsonResponse({"error": "Credenciais inválidas"}, status=status.HTTP_401_UNAUTHORIZED)
+    
 class TokenCSRFView(APIView):
     def get(self, request):
         token = get_token(request)
