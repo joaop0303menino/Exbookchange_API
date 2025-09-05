@@ -22,7 +22,18 @@ class UserService:
         user.set_password(validated_data['password']) 
         user.save() 
         
-        return user 
+        return user
+
+    def getUserByEmail(self, email):
+        return self.user_model.objects.filter(email=email).first()
+
+    def getUserById(self, id):
+        return self.user_model.objects.filter(id=id).first()
     
-    def getUserByEmail(self, email): 
-        return self.user_model.objects.filter(email=email).first() 
+    def login(self, email, password):
+        user = self.getUserByEmail(email)
+
+        if not user or not user.check_password(password):
+            return JsonResponse({"status": "error", "message": "Invalid email or password"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return user
