@@ -26,7 +26,10 @@ class LoginView(APIView):
     def post(self, request):
         email = request.data.get("email")
         password = request.data.get("password")
-        user = self.user_service.login_user(email, password)
+        user = self.user_service.login(email, password)
+        
+        if isinstance(user, JsonResponse):
+            return user
         
         if user:
             return JsonResponse({"message": "Login realizado com sucesso!"}, status=status.HTTP_200_OK)
