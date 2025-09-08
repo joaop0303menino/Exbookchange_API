@@ -5,12 +5,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('tokenCSRF/', include('apps.tokenCSRF.urls')),
-    path('users/', include('apps.users.urls')),
-    path('books/', include('apps.books.urls')),
-    path('transactions/', include('apps.transactions.urls')),
-    path('notifications/', include('apps.notifications.urls')),
-    path('complaints/', include('apps.complaints.urls')),
+    path('api/', include([
+        path('users/', include('apps.users.urls')),
+        path('books/', include('apps.books.urls')),
+        path('transactions/', include('apps.transactions.urls')),
+        path('notifications/', include('apps.notifications.urls')),
+        path('complaints/', include('apps.complaints.urls')),
+    ])),
 ]
 
 if settings.DEBUG:

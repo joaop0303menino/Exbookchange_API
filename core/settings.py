@@ -40,6 +40,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTH_USER_MODEL = 'users.User'
+
 CORS_ALLOWED_ORIGINS = config(
     "CORS_ALLOWED_ORIGINS",
     default="http://localhost:3000",
@@ -77,7 +79,7 @@ REST_FRAMEWORK = {
         # para JWT futuramente:
         # 'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
-    'EXCEPTION_HANDLER': 'myapp.utils.custom_exception_handler',
+    'EXCEPTION_HANDLER': 'apps.exception_handler.custom_exception_handler',
 }
 
 DATABASES = {
