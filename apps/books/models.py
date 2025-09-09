@@ -20,22 +20,16 @@ class Author(models.Model):
     def __str__(self):
         return self.full_name
     
-class ConservationStatus(models.Model):
-    status = models.CharField(
-        max_length=1,
-        choices=EnumStatus.choices,
-        default=EnumStatus.STATUS_5
-    )
-    description_status = models.TextField(blank=True, null=True)
+
 
     def __str__(self):
         return f"{self.get_status_display()} - {self.description_status or ''}"
 
 class Announces(models.Model):
-    conservation_status = models.ForeignKey(
-        ConservationStatus,
-        on_delete=models.CASCADE,
-        related_name='announces'
+    conservation_status = models.CharField(
+        max_length=1,
+        choices=EnumStatus.choices,  # usa o Enum
+        default=EnumStatus.STATUS_5
     )
     user = models.ForeignKey(
         User,

@@ -13,9 +13,10 @@ from .service.CreateAnnounceService import create_announce_service
 @parser_classes([MultiPartParser, FormParser])
 def create_announce(request):
     serializer = AnnounceSerializer(data=request.data)
-    if serializer.is_valid():
-        announce = create_announce_service(serializer.validated_data, request.user)
+    announce = create_announce_service(serializer.validated_data, request.user)
+  
 
+    if serializer.is_valid():         
         images = request.FILES.getlist('images')
         for i, img in enumerate(images):
             ImagesBook.objects.create(
@@ -24,7 +25,8 @@ def create_announce(request):
                 is_cover=(i == 0) 
             )
 
-        output_serializer = AnnounceSerializer(announce)
-        return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-    
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    output_serializer = AnnounceSerializer(announce)
+    return Response(output_serializer.data, status=status.HTTP_201_CREATED)
+    
