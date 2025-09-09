@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Announces, ConservationStatus, EnumExchangeDonation, ImagesBook
+from .models import Announces, EnumExchangeDonation, EnumStatus, ImagesBook
 from apps.users.models import User
 
 class ImagesBookSerializer(serializers.ModelSerializer):
@@ -10,7 +10,7 @@ class ImagesBookSerializer(serializers.ModelSerializer):
 class AnnounceSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(read_only=True)
     author_full_name = serializers.CharField( write_only=True)
-    conservation_status_id = serializers.IntegerField(write_only=True)
+    conservation_status = serializers.CharField(write_only=True)
     images = ImagesBookSerializer(many=True, read_only=True)  
 
     class Meta:
@@ -22,7 +22,7 @@ class AnnounceSerializer(serializers.ModelSerializer):
             "type",
             "user",
             "author_full_name",
-            "conservation_status_id",
+            "conservation_status",
             "images",
             "posted_at",
         ]
@@ -30,11 +30,11 @@ class AnnounceSerializer(serializers.ModelSerializer):
 
     def validate_type(self, value):
         if value not in [EnumExchangeDonation.EXCHANGE, EnumExchangeDonation.DONATION]:
-            raise serializers.ValidationError("Tipo inválido. Use 'E' (exchange) ou 'D' (donation).")
+            raise serializers.ValidationError("Tipo inválido. Use '1' (Exchange) ou '2' (Donation).")
         return value
 
-    def validate_conservation_status_id(self, value):
-        if not ConservationStatus.objects.filter(pk=value).exists():
+    def validate_conservation_status(self, value):
+        if value not in EnumStatus.values:
             raise serializers.ValidationError("Status de conservação inválido.")
         return value
 

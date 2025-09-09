@@ -1,13 +1,12 @@
 from django.shortcuts import get_object_or_404
-from apps.books.models import Author
+from apps.books.models import Author, EnumStatus
 from apps.users.models import User
-from ..models import Announces, ConservationStatus
+from ..models import Announces
 
 
 def create_announce_service(validated_data, request_user):
-    conservation_status = get_object_or_404(
-        ConservationStatus, pk=validated_data["conservation_status_id"]
-    )
+
+    conservation_status_value = validated_data["conservation_status"]
 
     author_full_name = validated_data.pop("author_full_name")
     author, _ = Author.objects.get_or_create(full_name=author_full_name)
@@ -16,11 +15,10 @@ def create_announce_service(validated_data, request_user):
         title=validated_data["title"],
         description=validated_data.get("description", ""),
         type=validated_data["type"],
-        conservation_status=conservation_status,
+        conservation_status=conservation_status_value, 
         user=request_user,
         author=author,
     )
     return announce
-
 
 
