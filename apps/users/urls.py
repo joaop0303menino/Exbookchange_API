@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views  # importa as views do app
+from . import views
 
 urlpatterns = [
-    # Exemplo de rota:
-    # path('', views.home, name='home'),
+    path('users/', views.UserViews.as_view(), name='user-create'),
+    path('login/', views.LoginView.as_view(), name='user-login'),
+    path('csrf-token/', views.TokenCSRFView.as_view(), name='csrf-token'),
 ]
