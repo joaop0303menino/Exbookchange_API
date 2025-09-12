@@ -1,7 +1,6 @@
 from django.urls import path
-from . import views  # importa as views do app
+from .views import create_announce  # importa as views do app
 
 urlpatterns = [
-    # Exemplo de rota:
-    # path('', views.home, name='home'),
+   path("announces/", create_announce, name="create_announce"),
 ]
