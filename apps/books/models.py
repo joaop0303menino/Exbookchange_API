@@ -28,8 +28,8 @@ class Author(models.Model):
 class Announces(models.Model):
     conservation_status = models.CharField(
         max_length=1,
-        choices=EnumStatus.choices,  # usa o Enum
-        default=EnumStatus.STATUS_5
+        choices=EnumStatus.choices,
+        default=EnumStatus.STATUS_1
     )
     user = models.ForeignKey(
         User,
