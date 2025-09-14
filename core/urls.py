@@ -2,12 +2,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from utils.csrf import TokenCSRFView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include([
         path('authentication/', include([
+            path('csrf-token/', TokenCSRFView.as_view(), name='csrf-token'),
             path('Login/', TokenObtainPairView.as_view()),
             path('Refresh/', TokenRefreshView.as_view()),
         ])),
