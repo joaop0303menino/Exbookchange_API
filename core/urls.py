@@ -13,7 +13,7 @@ urlpatterns = [
             path('Login/', TokenObtainPairView.as_view()),
             path('Refresh/', TokenRefreshView.as_view()),
         ])),
-        path('users/', include('apps.users.urls')),
+        path('', include('apps.users.urls')),
         path('books/', include('apps.books.urls')),
         path('transactions/', include('apps.transactions.urls')),
         path('notifications/', include('apps.notifications.urls')),
