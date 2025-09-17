@@ -10,8 +10,8 @@ urlpatterns = [
     path('api/v1/', include([
         path('authentication/', include([
             path('csrf-token/', TokenCSRFView.as_view(), name='csrf-token'),
-            path('Login/', TokenObtainPairView.as_view()),
-            path('Refresh/', TokenRefreshView.as_view()),
+            path('login/', TokenObtainPairView.as_view()),
+            path('refresh/', TokenRefreshView.as_view()),
         ])),
         path('', include('apps.users.urls')),
         path('books/', include('apps.books.urls')),
