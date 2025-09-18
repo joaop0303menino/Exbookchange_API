@@ -10,14 +10,14 @@ urlpatterns = [
     path('api/v1/', include([
         path('authentication/', include([
             path('csrf-token/', TokenCSRFView.as_view(), name='csrf-token'),
-            path('Login/', TokenObtainPairView.as_view()),
-            path('Refresh/', TokenRefreshView.as_view()),
+            path('login/', TokenObtainPairView.as_view()),
+            path('refresh/', TokenRefreshView.as_view()),
         ])),
-        path('users/', include('apps.users.urls')),
-        path('books/', include('apps.books.urls')),
-        path('transactions/', include('apps.transactions.urls')),
-        path('notifications/', include('apps.notifications.urls')),
-        path('complaints/', include('apps.complaints.urls')),
+        path('', include('apps.users.urls')),
+        path('', include('apps.books.urls')),
+        path('', include('apps.transactions.urls')),
+        path('', include('apps.notifications.urls')),
+        path('', include('apps.complaints.urls')),
     ])),
 ]
 
