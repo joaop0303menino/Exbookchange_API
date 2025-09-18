@@ -1,12 +1,15 @@
 from rest_framework.decorators import api_view, permission_classes, parser_classes
+from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, permissions
+
 
 from apps.books.serializers import AnnounceSerializer
 from apps.books.models import ImagesBook
 from .service.CreateAnnounceService import create_announce_service 
+from .service.UpdateAnnounceService import update_announce
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -29,3 +32,14 @@ def create_announce(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     
+class AnnounceUpdateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def put(self, request, pk):
+        serializer = AnnounceSerializer(data=request.data, partial=True)
+        if serializer.is_valid():
+            announce, error = update_announce(pk, request.user, serializer.validated_data)
+            if error:
+                return Response({"detail": error}, status=status.HTTP_404_NOT_FOUND)
+            return Response(AnnounceSerializer(announce).data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)      

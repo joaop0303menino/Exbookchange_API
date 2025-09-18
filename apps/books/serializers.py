@@ -42,3 +42,13 @@ class AnnounceSerializer(serializers.ModelSerializer):
         if value and not User.objects.filter(pk=value).exists():
             raise serializers.ValidationError("Autor inválido.")
         return value
+    
+    def update(self, instance, validated_data):
+        
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.type = validated_data.get('type', instance.type)
+        instance.conservation_status = validated_data.get('conservation_status', instance.conservation_status)
+        instance.author_full_name = validated_data.get('author_full_name', instance.author_full_name)
+        instance.save()
+        return instance

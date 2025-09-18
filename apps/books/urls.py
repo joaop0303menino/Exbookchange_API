@@ -1,6 +1,7 @@
 from django.urls import path
-from .views import create_announce  # importa as views do app
+from .views import create_announce, AnnounceUpdateView
 
 urlpatterns = [
-   path("announces/", create_announce, name="create_announce"),
+    path('announces/create/', create_announce, name='announce-create'),
+    path('announces/<int:pk>/update/', AnnounceUpdateView.as_view(), name='announce-update'),
 ]

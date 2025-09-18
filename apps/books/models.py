@@ -49,7 +49,6 @@ class Announces(models.Model):
     )
     author = models.ForeignKey(
         Author,
-        Author,
         on_delete=models.CASCADE,
         related_name='announces_authored'
     )
