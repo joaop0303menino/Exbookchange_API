@@ -12,6 +12,8 @@ urlpatterns = [
             path('csrf-token/', TokenCSRFView.as_view(), name='csrf-token'),
             path('login/', TokenObtainPairView.as_view()),
             path('refresh/', TokenRefreshView.as_view()),
+            path('login/', TokenObtainPairView.as_view()),
+            path('refresh/', TokenRefreshView.as_view()),
         ])),
         path('', include('apps.users.urls')),
         path('', include('apps.books.urls')),
