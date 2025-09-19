@@ -11,6 +11,23 @@ from apps.users.serializers import UserSerializer
 class UserViews(APIView):
     def __init__(self):
         self.user_service = UserService()
+        
+    def get(self, request):
+        user = request.G
+        
+        if user is None:
+            return JsonResponse({"status": "error", "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return JsonResponse({
+            "status": "success",
+            "user": {
+                "id": user.id,
+                "full_name": user.full_name,
+                "email": user.email,
+                "date_birth": user.date_birth,
+                "phone": user.phone
+            }
+        }, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -29,6 +46,21 @@ class UpdateProfileView(APIView):
    
     def __init__(self):
         self.profile_service = ProfileService()
+        
+    def get(self, request):
+        profile = request.query_params.get("user_id")
+        
+        if profile is None:
+            return JsonResponse({"status": "error", "message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return JsonResponse({
+            "status": "success",
+            "profile": {
+                "nickname": profile.nickname,
+                "description": profile.description,
+                "photo": profile.photo.url if profile.photo else None
+            }
+        }, status=status.HTTP_200_OK)
         
 
     def put(self, request):
