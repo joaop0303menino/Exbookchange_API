@@ -31,12 +31,7 @@ class UpdateProfileView(APIView):
         self.profile_service = ProfileService()
         
 
-    def put(self, request, user_id):
-        
-        user = User.objects.get(id=user_id)
-        
-        if user is None: 
-            return JsonResponse({"status": "error", "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+    def put(self, request):
 
         profile = self.profile_service.updateProfile(request.data)
         
