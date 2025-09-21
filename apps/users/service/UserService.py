@@ -6,6 +6,14 @@ class UserService:
     def __init__(self): 
         self.user_model = User 
         self.profile_model = Profile
+             
+    def getUser(self, validated_data):
+        User = self.user_model.objects.get(id=validated_data.get("id"), is_active=True).first()
+        
+        if User is None:
+            return JsonResponse({"status": "error", "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        return User
         
     def createUser(self, validated_data): 
         email = validated_data.get("email") 
@@ -24,10 +32,3 @@ class UserService:
         self.profile_model.objects.create(user=user, nickname=validated_data.get("full_name"))
                 
         return user
-
-    def getUserByEmail(self, email):
-        return self.user_model.objects.filter(email=email).first()
-
-    def getUserById(self, id):
-        return self.user_model.objects.filter(id=id).first()
-    
