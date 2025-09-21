@@ -13,10 +13,21 @@ class UserViews(APIView):
         self.user_service = UserService()
         
     def get(self, request):
-        user = request.G
+        user_id = request.query_params.get("user_id")
         
-        if user is None:
-            return JsonResponse({"status": "error", "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
+        if not user_id:
+            return JsonResponse(
+                {"status": "error", "message": "User ID is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user = self.user_service.getUserById(user_id)
+
+        if user is None or not user.is_active:
+            return JsonResponse(
+                {"status": "error", "message": "User not found or inactive"},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
         return JsonResponse({
             "status": "success",
@@ -25,7 +36,8 @@ class UserViews(APIView):
                 "full_name": user.full_name,
                 "email": user.email,
                 "date_birth": user.date_birth,
-                "phone": user.phone
+                "phone": user.phone,
+                "is_active": user.is_active
             }
         }, status=status.HTTP_200_OK)
 
@@ -48,7 +60,8 @@ class UpdateProfileView(APIView):
         self.profile_service = ProfileService()
         
     def get(self, request):
-        profile = request.query_params.get("user_id")
+        user_id = request.query_params.get("user_id")
+        profile = self.profile_service.getProfile({"user_id": user_id})
         
         if profile is None:
             return JsonResponse({"status": "error", "message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
