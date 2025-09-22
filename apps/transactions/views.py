@@ -1,7 +1,9 @@
+import rest_framework.decorators
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from rest_framework.permissions import IsAuthenticated
 from apps.transactions.serializers import ExchangeDonationHistoricSerializer
 from apps.transactions.service.ExchangeDonationHistoricService import ExchangeDonationService
 from apps.users.models import Profile
@@ -12,6 +14,7 @@ class ExchangeDonationHistoricViews(APIView):
         self.service = ExchangeDonationService()
 
     def post(self, request):
+        permission_classes = [IsAuthenticated]
         data = request.data
 
         user_receiver_name = data.get("user_receiver")
