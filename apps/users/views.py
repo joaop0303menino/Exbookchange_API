@@ -3,7 +3,6 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import APIView
 from django.http import JsonResponse
 from rest_framework import status
-from apps.users.models import User
 from apps.users.service.UserService import UserService
 from apps.users.service.ProfileService import ProfileService
 from apps.users.serializers import UserSerializer
@@ -51,6 +50,19 @@ class UserViews(APIView):
             return user
 
         return JsonResponse({"status": "success", "message": "User created successfully","data": {"id": user.id, "full_name": user.full_name, "email": user.email}}, status=status.HTTP_201_CREATED)
+    
+    def delete(self, request):
+        user_id = request.data.get("user_id")
+        
+        if not user_id:
+            return JsonResponse(
+                {"status": "error", "message": "User ID is required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        response = self.user_service.deleteUser(user_id)
+        
+        return response
     
 class UpdateProfileView(APIView):
     permission_classes = [IsAuthenticated]
