@@ -11,14 +11,14 @@ from .service.CreateAnnounceService import create_announce_service
 from .service.UpdateAnnounceService import update_announce
 
 class AnnounceCreateView(APIView):
-    @api_view(["POST"])
-    @permission_classes([IsAuthenticated])
-    @parser_classes([MultiPartParser, FormParser])
-    def create_announce(request):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def post(self, request):
         serializer = AnnounceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        announce = create_announce_service(serializer.validated_data, request.user)
+        announce = serializer.save(user=request.user)
 
         images = request.FILES.getlist('images')
         for i, img in enumerate(images):
@@ -34,24 +34,27 @@ class AnnounceUpdateView(APIView):
     parser_classes = [MultiPartParser, FormParser]
 
     def put(self, request, pk):
+
         try:
-            announce = Announces.objects.get(pk=pk, user=request.user)
+            announce = Announces.objects.get(pk=pk)
         except Announces.DoesNotExist:
             return Response({"detail": "Anúncio não encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        if announce.user != request.user:
+            return Response({"detail": "Você não tem permissão para atualizar este anúncio."},
+                            status=status.HTTP_403_FORBIDDEN)
+
         serializer = AnnounceSerializer(instance=announce, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            images = request.FILES.getlist('images')
-            if images:
-                ImagesBook.objects.filter(announce=announce).delete()
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-                for i, img in enumerate(images):
-                    ImagesBook.objects.create(
-                        announce=announce,
-                        image=img,
-                        is_cover=(i == 0)
-                    )
-
-            return Response(AnnounceSerializer(announce).data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        images = request.FILES.getlist('images')
+        if images:
+            ImagesBook.objects.filter(announce=announce).delete()
+            for i, img in enumerate(images):
+                ImagesBook.objects.create(
+                    announce=announce,
+                    image=img,
+                    is_cover=(i == 0)
+                )
+        return Response(AnnounceSerializer(announce).data, status=status.HTTP_200_OK)
