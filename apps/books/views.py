@@ -1,19 +1,28 @@
 from rest_framework.decorators import api_view, permission_classes, parser_classes
 from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status, permissions
 
 from apps.books.serializers import AnnounceSerializer
 from apps.books.models import Announces, ImagesBook
+from .service.ListAnnouncesService import get_announces_service
 from .service.CreateAnnounceService import create_announce_service
 from .service.UpdateAnnounceService import update_announce
 
-class AnnounceCreateView(APIView):
+class AnnouncesView(APIView):
     permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
+    def get(self, request):
+        filters = request.query_params.dict()
+
+        announces = get_announces_service(filters=filters)
+        serializer = AnnounceSerializer(announces, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     def post(self, request):
         serializer = AnnounceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -29,10 +38,7 @@ class AnnounceCreateView(APIView):
             )
         output_serializer = AnnounceSerializer(announce)
         return Response(output_serializer.data, status=status.HTTP_201_CREATED)
-class AnnounceUpdateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]
-
+    
     def put(self, request, pk):
 
         try:
@@ -58,3 +64,4 @@ class AnnounceUpdateView(APIView):
                     is_cover=(i == 0)
                 )
         return Response(AnnounceSerializer(announce).data, status=status.HTTP_200_OK)
+    
