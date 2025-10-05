@@ -14,10 +14,10 @@ urlpatterns = [
             path('refresh/', TokenRefreshView.as_view()),
         ])),
         path('', include('apps.users.urls')),
-        path('books/', include('apps.books.urls')),
+        path('', include('apps.books.urls')),
         path('', include('apps.transactions.urls')),
-        path('notifications/', include('apps.notifications.urls')),
-        path('complaints/', include('apps.complaints.urls')),
+        path('', include('apps.notifications.urls')),
+        path('', include('apps.complaints.urls')),
     ])),
 ]
 
