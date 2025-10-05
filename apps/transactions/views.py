@@ -6,38 +6,54 @@ from django.shortcuts import get_object_or_404
 from rest_framework.permissions import IsAuthenticated
 from apps.transactions.serializers import ExchangeDonationHistoricSerializer
 from apps.transactions.service.ExchangeDonationHistoricService import ExchangeDonationService
-from apps.users.models import Profile
 from apps.books.models import Announces
+from apps.users.service.UserService import UserService
+from apps.users.models import User
 
 class ExchangeDonationHistoricViews(APIView):
+    permission_classes = [IsAuthenticated]
+
     def __init__(self):
         self.service = ExchangeDonationService()
+        self.user_service = UserService()
 
     def post(self, request):
-        permission_classes = [IsAuthenticated]
+
         data = request.data
+        
+        announce_id = int(data.get("id_announce"))
+        user_receiver_id = int(data.get("user_receiver"))
+        user_contributor_id = int(data.get("id_user"))
 
-        user_receiver_name = data.get("user_receiver")
-        user_receiver = Profile.objects.filter(nickname=user_receiver_name).first()
-
-        if not user_receiver:
+        if not all([announce_id, user_receiver_id, user_contributor_id]):
             return Response({
                 "status": "error",
-                "message": f"Usuário '{user_receiver_name}' não encontrado."
-            }, status=status.HTTP_404_NOT_FOUND)
+                "message": "Fields are required: id_announce, user_receiver, id_user"
+            }, status=status.HTTP_400_BAD_REQUEST)
 
-        serializer = ExchangeDonationHistoricSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        
-        announce_id = data.get("id_announce")
+        if user_receiver_id == user_contributor_id:
+            return Response({
+                "status": "error",
+                "message": "You cannot exchange or donate to yourself."
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         announce = get_object_or_404(Announces, id=announce_id)
+        user_receiver = get_object_or_404(User, id=user_receiver_id)
+        user_contributor = get_object_or_404(User, id=user_contributor_id)
+
+        transaction = self.service.create_exchange(
+            id_user=user_contributor,
+            id_announce=announce,
+            user_receiver=user_receiver
+        )
+        
         announce.is_archived = True
         announce.save()
 
+        serializer = ExchangeDonationHistoricSerializer(transaction)
 
         return Response({
             "status": "success",
-            "message": "Transação registrada com sucesso",
+            "message": "Transaction recorded successfully.",
             "data": serializer.data
         }, status=status.HTTP_201_CREATED)

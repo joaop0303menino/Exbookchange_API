@@ -1,6 +1,6 @@
 from django.urls import path
-from apps.users import views
+from apps.transactions.views import ExchangeDonationHistoricViews
 
 urlpatterns = [
-  path("exchange-donation-historic/", views.UserViews.as_view(), name="exchange-donation-historic"),
+  path("exchange-donation-historic", ExchangeDonationHistoricViews.as_view(), name="exchange-donation-historic"),
 ]

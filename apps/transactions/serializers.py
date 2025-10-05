@@ -5,3 +5,5 @@ class ExchangeDonationHistoricSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExchangeDonationHistoric
         fields = "__all__"
+
+    
