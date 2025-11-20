@@ -6,6 +6,7 @@ from rest_framework import status
 from apps.users.service.UserService import UserService
 from apps.users.service.ProfileService import ProfileService
 from apps.users.serializers import UserSerializer
+from apps.books.service.AnnounceService import AnnounceService
 
 class UserViews(APIView):
     def __init__(self):
@@ -20,7 +21,7 @@ class UserViews(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        user = self.user_service.getUserById(user_id)
+        user = self.user_service.getUser(user_id)
 
         if user is None or not user.is_active:
             return JsonResponse(
@@ -70,13 +71,35 @@ class UpdateProfileView(APIView):
    
     def __init__(self):
         self.profile_service = ProfileService()
-        
+    
     def get(self, request):
         user_id = request.query_params.get("user_id")
         profile = self.profile_service.getProfile({"user_id": user_id})
         
         if profile is None:
-            return JsonResponse({"status": "error", "message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
+            return JsonResponse(
+                {"status": "error", "message": "Profile not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        announce_service = AnnounceService()
+        announces = announce_service.getAnnounces()
+
+        if isinstance(announces, JsonResponse):
+
+            if announces.content and b"No announces found" in announces.content:
+                announces_list = []
+            else:
+                return announces
+        else:
+            announces_list = [
+                {
+                    "id": announce.id,
+                    "title": announce.title,
+                    "description": announce.description
+                }
+                for announce in announces.filter(user_id=user_id)
+            ]
 
         return JsonResponse({
             "status": "success",
@@ -84,10 +107,10 @@ class UpdateProfileView(APIView):
                 "nickname": profile.nickname,
                 "description": profile.description,
                 "photo": profile.photo.url if profile.photo else None
-            }
+            },
+            "announces": announces_list
         }, status=status.HTTP_200_OK)
         
-
     def put(self, request):
 
         profile = self.profile_service.updateProfile(request.data)

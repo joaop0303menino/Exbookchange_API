@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config("SECRET_KEY", default="unsafe-secret-key")
 DEBUG = config("DEBUG", default=True, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="").split(",")
+ALLOWED_HOSTS = [host.strip() for host in config("ALLOWED_HOSTS", default="").split(",") if host.strip()]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -23,8 +23,6 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.books',
     'apps.transactions',
-    'apps.notifications',
-    'apps.complaints',
 ]
 
 ROOT_URLCONF = 'core.urls'

@@ -16,8 +16,6 @@ urlpatterns = [
         path('', include('apps.users.urls')),
         path('', include('apps.books.urls')),
         path('', include('apps.transactions.urls')),
-        path('', include('apps.notifications.urls')),
-        path('', include('apps.complaints.urls')),
     ])),
 ]
 
