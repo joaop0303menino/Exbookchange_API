@@ -16,6 +16,9 @@ class UserService:
             return JsonResponse({"status": "error", "message": "User not found"}, status=status.HTTP_404_NOT_FOUND)
         
         return User
+    
+    def getUserByEmail(self, email):
+        return self.user_model.objects.filter(email=email, is_active=True).first()
         
     def createUser(self, validated_data): 
         email = validated_data.get("email") 
