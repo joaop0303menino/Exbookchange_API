@@ -19,6 +19,12 @@ class UserService:
     
     def getUserByEmail(self, email):
         return self.user_model.objects.filter(email=email, is_active=True).first()
+    
+    def getUserByEmail(self, email):
+        return self.user_model.objects.filter(email=email, is_active=True).first()
+    
+    def getUserByPhone(self, phone):
+        return self.user_model.objects.filter(phone=phone, is_active=True).first()
         
     def createUser(self, validated_data): 
         email = validated_data.get("email") 
