@@ -65,7 +65,7 @@ class UserViews(APIView):
         
         return response
     
-class UpdateProfileView(APIView):
+class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
    
