@@ -14,7 +14,20 @@ class UserViews(APIView):
         
     def get(self, request):
         user_id = request.query_params.get("user_id")
+        phone = request.query_params.get("phone")
         
+        if phone:
+            user = self.user_service.getUserByPhone(phone)
+            if user is None:
+                return JsonResponse(
+                    {"status": "error", "message": "User not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
+            return JsonResponse({
+                "status": "success",
+                "user_id": user.id,
+            }, status=status.HTTP_200_OK)
+
         if not user_id:
             return JsonResponse(
                 {"status": "error", "message": "User ID is required"},
@@ -65,7 +78,7 @@ class UserViews(APIView):
         
         return response
     
-class UpdateProfileView(APIView):
+class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser]
    

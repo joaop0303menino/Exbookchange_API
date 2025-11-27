@@ -27,7 +27,7 @@ class AnnounceView(APIView):
             title = serializer.data.get("title")
             phone = announce.user.phone
             
-            whatsapp_url = f"https://wa.me/55{phone}?text=Oiii,%20eu%20fiquei%20interessado%20no%20seu%20anúncio%20{title}."
+            whatsapp_url = f"https://wa.me/{phone}?text=Oiii,%20eu%20fiquei%20interessado%20no%20seu%20anúncio%20{title}."
             
             return JsonResponse(
                 {"status": "success", "announce": serializer.data, "what_user": whatsapp_url},
