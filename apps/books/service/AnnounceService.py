@@ -7,7 +7,7 @@ class AnnounceService:
         self.announces_model = Announces
         
     def getAnnounces(self):
-        Announces = self.announces_model.objects.all()
+        Announces = self.announces_model.objects.filter(is_archived=False)
         
         if not Announces.exists():
             return JsonResponse({"status": "error", "message": "No announces found"}, status=status.HTTP_404_NOT_FOUND)

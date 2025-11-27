@@ -34,7 +34,7 @@ class AnnounceView(APIView):
                 status=200
             )
 
-        announces = Announces.objects.all()
+        announces = Announces.objects.filter(is_archived=False)
 
         if not announces.exists():
             return JsonResponse(

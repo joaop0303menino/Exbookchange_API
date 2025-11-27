@@ -96,7 +96,9 @@ class UpdateProfileView(APIView):
                 {
                     "id": announce.id,
                     "title": announce.title,
-                    "description": announce.description
+                    "description": announce.description,
+                    "images": [img.image.url for img in announce.imagesbook_set.all()],
+                    "is_active": announce.is_active
                 }
                 for announce in announces.filter(user_id=user_id)
             ]
