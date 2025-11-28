@@ -121,7 +121,8 @@ class ProfileView(APIView):
                             "id": img.id,
                             "announce": img.announce_id,
                             "image": img.image.url,
-                            "is_cover": img.is_cover
+                            "is_cover": img.is_cover,
+                            "is_archived": img.is_archived
                         }
                         for img in announce.images.all()
                     ]
