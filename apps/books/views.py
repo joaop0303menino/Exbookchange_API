@@ -97,7 +97,7 @@ class AnnounceView(APIView):
         return Response(AnnounceSerializer(announce).data, status=status.HTTP_200_OK)
 
     def delete(self, request):
-        announce_id = request.data.get("announce_id")
+        announce_id = request.query_params.get("announce_id")
 
         if not announce_id:
             return JsonResponse(
