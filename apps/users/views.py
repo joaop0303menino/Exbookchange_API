@@ -1,3 +1,4 @@
+import PIL
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import APIView
@@ -86,45 +87,60 @@ class ProfileView(APIView):
         self.profile_service = ProfileService()
     
     def get(self, request):
-        user_id = request.query_params.get("user_id")
-        profile = self.profile_service.getProfile({"user_id": user_id})
-        
-        if profile is None:
-            return JsonResponse(
-                {"status": "error", "message": "Profile not found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
+        try:
+            user_id = request.query_params.get("user_id")
+            profile = self.profile_service.getProfile({"user_id": user_id})
+            
+            if profile is None:
+                return JsonResponse(
+                    {"status": "error", "message": "Profile not found"},
+                    status=status.HTTP_404_NOT_FOUND
+                )
 
-        announce_service = AnnounceService()
-        announces = announce_service.getAnnounces()
+            announce_service = AnnounceService()
+            announces = announce_service.getAnnounces()
 
-        if isinstance(announces, JsonResponse):
+            if isinstance(announces, JsonResponse):
 
-            if announces.content and b"No announces found" in announces.content:
-                announces_list = []
+                if announces.content and b"No announces found" in announces.content:
+                    announces_list = []
+                else:
+                    return announces
             else:
-                return announces
-        else:
-            announces_list = [
-                {
+                announces_list = []
+            for announce in announces.filter(user_id=user_id):
+                announces_list.append({
                     "id": announce.id,
                     "title": announce.title,
                     "description": announce.description,
-                    "images": [img.image.url for img in announce.imagesbook_set.all()],
-                    "is_active": announce.is_active
-                }
-                for announce in announces.filter(user_id=user_id)
-            ]
+                    "type": announce.type,
+                    "user": announce.user_id,
+                    "posted_at": announce.posted_at,
+                    "images": [
+                        {
+                            "id": img.id,
+                            "announce": img.announce_id,
+                            "image": img.image.url,
+                            "is_cover": img.is_cover
+                        }
+                        for img in announce.images.all()
+                    ]
+                })
 
-        return JsonResponse({
-            "status": "success",
-            "profile": {
-                "nickname": profile.nickname,
-                "description": profile.description,
-                "photo": profile.photo.url if profile.photo else None
-            },
-            "announces": announces_list
-        }, status=status.HTTP_200_OK)
+            return JsonResponse({
+                "status": "success",
+                "profile": {
+                    "nickname": profile.nickname,
+                    "description": profile.description,
+                    "photo": profile.photo.url if profile.photo else None
+                },
+                "announces": announces_list
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return JsonResponse(
+                {"status": "error", "message": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
         
     def put(self, request):
 

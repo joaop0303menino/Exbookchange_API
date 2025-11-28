@@ -8,13 +8,9 @@ class ProfileService:
         
     def getProfile(self, validated_data):
         user_id = validated_data.get("user_id")
-        profile = self.profile_model.objects.get(user_id=user_id)
-  
-        if profile is None:
-            return JsonResponse({"status": "error", "message": "Profile not found"}, status=status.HTTP_404_NOT_FOUND)
         
-        return profile
-
+        return self.profile_model.objects.filter(user_id=user_id).first()
+  
     def updateProfile(self, validated_data):
         user_id = validated_data.get("user_id")
         profile = self.profile_model.objects.get(user_id=user_id)
