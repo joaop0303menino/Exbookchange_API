@@ -67,7 +67,7 @@ class UserViews(APIView):
         return JsonResponse({"status": "success", "message": "User created successfully","data": {"id": user.id, "full_name": user.full_name, "email": user.email}}, status=status.HTTP_201_CREATED)
     
     def delete(self, request):
-        user_id = request.data.get("user_id")
+        user_id = request.query_params.get("user_id")
         
         if not user_id:
             return JsonResponse(
