@@ -116,13 +116,13 @@ class ProfileView(APIView):
                     "type": announce.type,
                     "user": announce.user_id,
                     "posted_at": announce.posted_at,
+                    "is_archived": announce.is_archived,
                     "images": [
                         {
                             "id": img.id,
                             "announce": img.announce_id,
                             "image": img.image.url,
                             "is_cover": img.is_cover,
-                            "is_archived": img.is_archived
                         }
                         for img in announce.images.all()
                     ]
