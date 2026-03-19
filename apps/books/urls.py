@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views  # importa as views do app
+from .views import AnnounceView
 
 urlpatterns = [
-    # Exemplo de rota:
-    # path('', views.home, name='home'),
+    path('announces/', AnnounceView.as_view(), name='announce-test'),
+    path('announces/<int:pk>/update', AnnounceView.as_view(), name='announce-test'),
 ]

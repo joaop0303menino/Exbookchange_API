@@ -2,14 +2,21 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
+from utils.csrf import TokenCSRFView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', include('apps.users.urls')),
-    path('books/', include('apps.books.urls')),
-    path('transactions/', include('apps.transactions.urls')),
-    path('notifications/', include('apps.notifications.urls')),
-    path('complaints/', include('apps.complaints.urls')),
+    path('api/v1/', include([
+        path('authentication/', include([
+            path('csrf-token/', TokenCSRFView.as_view(), name='csrf-token'),
+            path('login/', TokenObtainPairView.as_view()),
+            path('refresh/', TokenRefreshView.as_view()),
+        ])),
+        path('', include('apps.users.urls')),
+        path('', include('apps.books.urls')),
+        path('', include('apps.transactions.urls')),
+    ])),
 ]
 
 if settings.DEBUG:
